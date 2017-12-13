@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
+using dataaccess;
+using System.Linq;
 
 namespace Microsoft.Bot.Sample.LuisBot
 {
@@ -19,7 +21,17 @@ namespace Microsoft.Bot.Sample.LuisBot
         [LuisIntent("None")]
         public async Task NoneIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync($"You have reached the none intent. You said: {result.Query}"); //
+            var db = new BotDbContext();
+
+            var tasks = db.OnboardingTasks.ToList();
+
+            var msg = $"Here is what you need to do: ";
+
+            foreach (var t in tasks) {
+                msg = msg + string.Format("\n {0}",t.TaskName);
+            }
+
+            await context.PostAsync(msg); //
             context.Wait(MessageReceived);
         }
 
