@@ -159,8 +159,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dataaccess\dataaccess.csproj">
-      <Project>{85418d88-d6da-47a8-bf5e-422d49d6bdad}</Project>
+    <ProjectReference Include="dataaccess\dataaccess.csproj">
+      <Project>{85418D88-D6DA-47A8-BF5E-422D49D6BDAD}</Project>
       <Name>dataaccess</Name>
     </ProjectReference>
   </ItemGroup>
