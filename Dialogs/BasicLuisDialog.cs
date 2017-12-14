@@ -34,7 +34,7 @@ namespace Microsoft.Bot.Sample.LuisBot
         // Go to https://luis.ai and create a new intent, then train/publish your luis app.
         // Finally replace "MyIntent" with the name of your newly created intent in the following handler
         [LuisIntent("Fetch Tasks")]
-        public async Task MyIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
+        public async Task FetchAllTasks(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
         {
             var db = new BotDbContext();
 
@@ -68,6 +68,44 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             await context.PostAsync(msg); //
                         
+            context.Wait(MessageReceived);
+        }
+
+        [LuisIntent("Fetch Next Task")]
+        public async Task FetchNextIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
+        {
+            var db = new BotDbContext();
+
+            var tasks = db.OnboardingTasks.ToList();
+            var nextTask = 0;
+
+            for (var i = 0; i < tasks.Count; i++)
+            {
+                if (!tasks[i].TaskComplete)
+                {
+                    nextTask = i;
+                    break;
+                }
+            }//SORRY GEOFF//
+
+            var msg = string.Format("{0}", tasks[nextTask].TaskName);
+
+            await context.PostAsync(msg);
+
+            context.Wait(MessageReceived);
+        }
+
+        [LuisIntent("Task Help")]
+        public async Task HelpIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
+        {
+            var db = new BotDbContext();
+
+            var tasks = db.OnboardingTasks.ToList();
+
+            var msg = $"What do you need help with?";
+
+            await context.PostAsync(msg);
+
             context.Wait(MessageReceived);
         }
     }
