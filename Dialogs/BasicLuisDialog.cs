@@ -46,7 +46,6 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             var act = await activity;
 
-
             foreach (var t in tasks)
             {
                 msg = msg + string.Format("\n {0}", t.TaskName);
@@ -80,12 +79,53 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             var msg = string.Format("{0}", tasks[nextTask].TaskName);
 
-            var reply = (await activity);
+            var message = context.MakeMessage();
+            message.TextFormat = TextFormatTypes.Plain;
+            message.Text = msg;
+            message.SuggestedActions = new SuggestedActions()
+            {
+                Actions = new List<CardAction>() {
+                        new CardAction(){ Title = "Show me more", Type = ActionTypes.PostBack, Value = "Show Me More", Text="ShowMore"}                        
+                }
+            };
 
-            await context.PostAsync(msg);
+            message.ReplyToId = context.Activity.Id;
 
+
+            await context.PostAsync(message);
             context.Wait(MessageReceived);
         }
+
+        [LuisIntent("Show Me More")]
+        public async Task ShowMoreIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result) {
+            var db = new BotDbContext();
+
+            var task = db.OnboardingTasks.FirstOrDefault();
+            var nextTask = 0;
+
+            //var msg = string.Format("{0}", tasks[nextTask].TaskName);
+
+            var message = context.MakeMessage();
+            message.TextFormat = TextFormatTypes.Plain;
+            message.Text = string.Format("{0} - {1}", task.TaskName, task.TaskDescription);
+
+            message.SuggestedActions = new SuggestedActions() {
+                Actions = new List<CardAction> {
+                  new CardAction{ Title = "Click here", Type = ActionTypes.OpenUrl, Value = "https://rbauction.sharepoint.com/it/pg/sf/_layouts/15/DocIdRedir.aspx?ID=U7JYW44APTCC-399-36&e=827f8be4cf294b5587983221312d20fb"}
+                  }
+                };
+            //message.
+
+
+            message.ReplyToId = context.Activity.Id;
+
+
+            await context.PostAsync(message);
+            context.Wait(MessageReceived);
+        }
+
+
+
 
         [LuisIntent("Task Help")]
         public async Task HelpIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
@@ -118,6 +158,19 @@ namespace Microsoft.Bot.Sample.LuisBot
             message.ReplyToId = context.Activity.Id;
 
             await context.PostAsync(message);
+
+            context.Wait(MessageReceived);
+        }
+
+       
+
+        [LuisIntent("Count Incomplete Tasks")]
+        public async Task Couunt(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
+        {
+
+            var msg = $"I'm guessing 3?";
+
+            await context.PostAsync(msg);
 
             context.Wait(MessageReceived);
         }
