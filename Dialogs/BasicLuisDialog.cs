@@ -79,15 +79,6 @@ namespace Microsoft.Bot.Sample.LuisBot
             var tasks = db.OnboardingTasks.ToList();
             var nextTask = 0;
 
-            for (var i = 0; i < tasks.Count; i++)
-            {
-                if (!tasks[i].TaskComplete)
-                {
-                    nextTask = i;
-                    break;
-                }
-            }//SORRY GEOFF//
-
             var msg = string.Format("{0}", tasks[nextTask].TaskName);
 
             await context.PostAsync(msg);

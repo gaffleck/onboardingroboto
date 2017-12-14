@@ -11,8 +11,6 @@ namespace dataaccess
         public Guid ID { get; set; }
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
-        public string TaskOwner { get; set; }
-        public bool TaskComplete { get; set; }
-
+        
     }
 }
