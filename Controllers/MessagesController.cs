@@ -27,6 +27,7 @@ namespace Microsoft.Bot.Sample.LuisBot
                 try
                 {
                     await Conversation.SendAsync(activity, () => new BasicLuisDialog());
+                   
                 }
                 catch (Exception ex) {
                     var exep = ex.InnerException;
