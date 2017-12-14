@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using System.Linq;
 using Microsoft.Bot.Connector;
 using dataaccess;
+using System.Collections.Generic;
 
 namespace Microsoft.Bot.Sample.LuisBot
 {
@@ -42,32 +43,29 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             var msg = $"Here is what you need to do: ";
 
+            var act = await activity;
+
+
             foreach (var t in tasks)
             {
                 msg = msg + string.Format("\n {0}", t.TaskName);
             }
-            //IMessageActivity act = await activity;
-            //var reply = act.CreateReply();
+
+            var message = context.MakeMessage();
+            message.TextFormat = TextFormatTypes.Plain;
+            message.Text = msg;
+            message.SuggestedActions = new SuggestedActions() {
+                Actions = new List<CardAction>() {
+                        new CardAction(){ Title = "Do this now"},
+                        new CardAction(){ Title = "Do this later"},
+                        new CardAction(){ Title = "I did this already"}
+                }
+            };
+
+            message.ReplyToId = context.Activity.Id;
 
 
-            //reply.Type = ActivityTypes.Message;
-            //reply.TextFormat = TextFormatTypes.Plain;
-
-            //reply.SuggestedActions = new SuggestedActions()
-            //{
-            //    Actions = new List<CardAction>()
-            //   {
-            //    new CardAction(){ Title = "Blue", Type=ActionTypes.ImBack, Value="Blue" },
-            //    new CardAction(){ Title = "Red", Type=ActionTypes.ImBack, Value="Red" },
-            //    new CardAction(){ Title = "Green", Type=ActionTypes.ImBack, Value="Green" }
-            //}
-            //};
-
-            //await context.PostAsync(reply); //
-
-
-            await context.PostAsync(msg); //
-                        
+            await context.PostAsync(message);          
             context.Wait(MessageReceived);
         }
 
@@ -80,6 +78,8 @@ namespace Microsoft.Bot.Sample.LuisBot
             var nextTask = 0;
 
             var msg = string.Format("{0}", tasks[nextTask].TaskName);
+
+            var reply = (await activity);
 
             await context.PostAsync(msg);
 
