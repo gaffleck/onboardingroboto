@@ -36,16 +36,16 @@ namespace Microsoft.Bot.Sample.LuisBot
         [LuisIntent("Fetch Tasks")]
         public async Task FetchAllTasks(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
         {
-            var db = new BotDbContext();
+            //var db = new BotDbContext();
 
-            var tasks = db.OnboardingTasks.ToList();
+            //var tasks = db.OnboardingTasks.ToList();
 
-            var msg = $"Here is what you need to do: ";
+            //var msg = $"Here is what you need to do: ";
 
-            foreach (var t in tasks)
-            {
-                msg = msg + string.Format("\n {0}", t.TaskName);
-            }
+            //foreach (var t in tasks)
+            //{
+            //    msg = msg + string.Format("\n {0}", t.TaskName);
+            //}
             //IMessageActivity act = await activity;
             //var reply = act.CreateReply();
 
@@ -65,6 +65,7 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             //await context.PostAsync(reply); //
 
+            var msg = $"list of tasks";
 
             await context.PostAsync(msg); //
                         
@@ -74,12 +75,14 @@ namespace Microsoft.Bot.Sample.LuisBot
         [LuisIntent("Fetch Next Task")]
         public async Task FetchNextIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
         {
-            var db = new BotDbContext();
+            //var db = new BotDbContext();
 
-            var tasks = db.OnboardingTasks.ToList();
-            var nextTask = 0;
+            //var tasks = db.OnboardingTasks.ToList();
+            //var nextTask = 0;
 
-            var msg = string.Format("{0}", tasks[nextTask].TaskName);
+            //var msg = string.Format("{0}", tasks[nextTask].TaskName);
+
+            var msg = $"next task";
 
             await context.PostAsync(msg);
 
@@ -89,9 +92,9 @@ namespace Microsoft.Bot.Sample.LuisBot
         [LuisIntent("Task Help")]
         public async Task HelpIntent(IDialogContext context, IAwaitable<IMessageActivity> activity, LuisResult result)
         {
-            var db = new BotDbContext();
+            //var db = new BotDbContext();
 
-            var tasks = db.OnboardingTasks.ToList();
+            //var tasks = db.OnboardingTasks.ToList();
 
             var msg = $"What do you need help with?";
 
